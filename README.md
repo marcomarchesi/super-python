@@ -5,7 +5,9 @@ All I need on Python
 [Truth Value Testing](#Truth-Value-Testing)  
 [String vs Bytes](#Strings-vs-Bytes)  
 [Threading](#Threading)
-[Functions](#Functions)  
+[Functions](#Functions)
+[String Templates](#String-Templates)
+[Built-in Functions](#Built-in-Functions)
 
 
 ## Coding Style
@@ -78,4 +80,76 @@ if __name__ == "__main__":
 def do_something(*args, **kwargs):  # positional and named arguments
     pass
 ```
+
+## String Templates
+- More powerful than `"Hello {}".format("World")` or `"Hello %s" % "World"`.  
+- you can use a `dictionary` alternatively.  
+```python
+from string import Template
+
+templ = Template("Hello ${what}")
+print (templ.substitute(what="World"))
+```
+
+## Built-in Functions
+
+```python
+list1 = [1,2,3,4,0,6]
+
+print(any(list1)) #True
+print(all(list1)) #False
+print(sum(list1)) #16
+print(min(list1)) #0
+print(max(list1)) #6
+```
+
+### Iterators
+
+```python
+days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+days_ita = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab']
+# Classic iteration
+for d in days:
+    print(d)
+# or enumerating
+for index, d in enumerate(days):
+    print(index, d)
+# with zip it merges two lists and each element is a tuple
+for d in zip(days, days_ita):
+    print(d)
+# with iterators
+i = iter(days)
+print(next(i)) #Sun
+print(next(i)) #Mon
+print(next(i)) #Tue
+```
+
+### Transform functions
+
+- `filter(callable_func, iterable)`
+```python
+days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+
+def filter_func(x):
+    if x[0] == 'M': #check any item which starts with 'M'
+        return True
+    return False
+
+not_m = filter(filter_func, days) #filter days by filter_func criteria
+print(next(not_m)) #Mon
+```
+
+- `map(callable_func, iterable)`  
+```python
+numbers = [1,34,6,76,44,8]
+
+def map_func(x):
+    return x+1
+
+items = list(map(map_func, numbers))
+print(items) #[2, 35, 7, 77, 45, 9]
+```
+
+- other good ones: `sorted()`
+
 
