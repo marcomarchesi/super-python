@@ -4,11 +4,11 @@ All I need on Python
 [Coding Style](#Coding-Style)  
 [Truth Value Testing](#Truth-Value-Testing)  
 [String vs Bytes](#Strings-vs-Bytes)  
-[Threading](#Threading)
-[Functions](#Functions)
-[String Templates](#String-Templates)
-[Built-in Functions](#Built-in-Functions)
-[itertools module](#itertools-module)
+[Threading](#Threading)  
+[Functions](#Functions)  
+[String Templates](#String-Templates)  
+[Built-in Functions](#Built-in-Functions)  
+[itertools module](#itertools-module)  
 
 
 ## Coding Style
@@ -372,6 +372,30 @@ print(list(collection)) #['elephant', 'tiger', 'gazelle', 'giraffe', 'lion', 'ti
 collection.rotate(-2) #rotate by -2 (to the left)
 print(list(collection)) #['gazelle', 'giraffe', 'lion', 'tiger', 'elephant', 'tiger']
 ```
+
+## Advanced Classes
+
+### Enumerations
+- no duplicate names but same values are allowed
+- useful to avoid magic numbers
+```python
+from enum import Enum, auto
+
+class Animal(Enum):
+    GIRAFFE = 0
+    TIGER = 1
+    ELEPHANT = 2
+    LION = auto()
+
+animal = Animal.GIRAFFE
+print(animal.name) #GIRAFFE
+print(animal.value) #0
+print(Animal.LION.value) #3
+```
+
+- by using the `unique` decorator, we prevent duplicated values
+- by using the function `auto()` we assign a value automatically
+
 
 
 
