@@ -9,7 +9,7 @@ All I need on Python
 [String Templates](#String-Templates)  
 [Built-in Functions](#Built-in-Functions)  
 [itertools module](#itertools-module)  
-
+[Logging](#Logging)
 
 ## Coding Style
 - to follow PEP8
@@ -395,6 +395,74 @@ print(Animal.LION.value) #3
 
 - by using the `unique` decorator, we prevent duplicated values
 - by using the function `auto()` we assign a value automatically
+
+### Class string functions
+- We want to extend the control on how string and bytes types are represented
+```python
+class Profile:
+
+    def __init__(self):
+        self.name = "Marco"
+        self.surname = "Marchesi"
+        self.age = 43
+    # let's override repr
+    def __repr__(self):
+        return "<Profile - class: name:{0} surname:{1} age:{2}".format(self.name, self.surname, self.age)
+    # let's override bytes
+    def __bytes__(self):
+        value = "Profile:{0}:{1}:{2}".format(self.name, self.surname, self.age)
+        return value.encode('utf-8')
+    # we can also override str
+    def __str__(self):
+        pass
+
+marco = Profile()
+print(repr(marco)) #<Profile - class: name:Marco surname:Marchesi age:43
+print(bytes(marco)) #b'Profile:Marco:Marchesi:43'
+```
+
+### Class attribute functions
+- `__getattr__` is called only when the attribute can't be found
+- `__getattribute__` is always called
+- `__setattr__` when an attribute is set with a value
+- `__delattr__` to delete the attribute
+- `__dir__` when the user wants to discover the available attribute functions with `dir()`
+
+They can be all overriden
+
+### Class numerical operators
+- they can be used to introduce operations between instances of a class
+Example with addition operation:
+```python
+class Point:
+    def __init__(self,x,y):
+        self.x = x
+        self.y = y
+
+    def __add__(self, other):
+        return Point(self.x + other.x, self.y + other.y)
+    
+    def __str__(self):
+        return "Point({0},{1})".format(self.x, self.y)
+
+p1 = Point(2,4)
+p2 = Point(3,5)
+p3 = p1 + p2
+print(p3) #Point(5,9)
+```
+
+### Class comparison operators
+- same concept as the numerical operators above
+- we use some class attribute to compare, otherwise Python will raise an error
+- we can use `sorted()` etc. as well
+
+## Logging
+- captures and records events while the app is running
+- useful for debugging
+- events can be categorized
+- history of the program can be stored in files
+- the output is highly customisable
+
 
 
 
