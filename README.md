@@ -462,6 +462,22 @@ print(p3) #Point(5,9)
 - events can be categorized
 - history of the program can be stored in files
 - the output is highly customisable
+- debug, info, warning, error, critical
+```python
+import logging
+#set the level and save all the log into a file (by default in append mode)
+logging.basicConfig(level=logging.DEBUG, filename='output.log', filemode='w')
+logging.info("Hello hello {0}!".format("Marco"))
+```
+
+TODO
+- add custom format and datetime
+- external data (dictionary)
+
+## List Comprehensions
+- Comprehensions work not only on lists but also dictionaries, sets.
+- drawback: if it's too complex it will be difficult to read and performance issues
+
 
 
 
