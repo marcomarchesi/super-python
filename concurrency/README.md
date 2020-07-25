@@ -77,7 +77,7 @@ and using `recv()` and `send()` to receive and send data
 - use messages for communication between processes rather than synchronisation primitives like locks.
 - choose between `Pipe()` and `Queue()`
 
-## Notes
+# Threading
 - lock: acquire and release but you can have them implicitly in a context manager
 - in threading: `map()` vs `submit()`. Map accepts an iterable as argument
 -  **multiprocessing** is a form of **parallelism**, which is a form of **concurrency**, like **threading**
