@@ -84,4 +84,10 @@ and using `recv()` and `send()` to receive and send data
 - **Deadlock** happens if a thread doesn't release the lock
 - use a Pipeline to solve a Producer/Consumer problem
     -- but only one data at the time
-- use a Queue and Event sync mechanism
+    --> better with a Queue
+- use a Queue and Event sync mechanism (as in `producer_consumer.py`)
+- not easy to debug in general, try for example to forget to `import random` from the script above
+- Threading objects
+    `threading.Semaphore` used to protect resources, it's atomic (it cannot be interrupted)
+    `threading.Timer` used for running functions with a delay on a new thread
+    `threading.Barrier` it forces sync between a number of threads
