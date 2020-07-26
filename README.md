@@ -104,6 +104,24 @@ print(min(list1)) #0
 print(max(list1)) #6
 ```
 
+- `@staticmethod` without an instance of the class and no implicit arguments
+- `@classmethod` with the class itself as first implicit argument
+```python
+class Hello:
+    class_value = 70
+    def __init__(self):
+        self.value = 7
+    @staticmethod
+    def try_this(value):
+        return value
+    @classmethod
+    def try_this_as_well(cls, value):
+        return cls.class_value + value
+
+print(Hello.try_this("Marco")) #Marco
+print(Hello.try_this_as_well(7)) #77
+```
+
 ### Iterators
 
 ```python
@@ -477,6 +495,26 @@ TODO
 ## List Comprehensions
 - Comprehensions work not only on lists but also dictionaries, sets.
 - drawback: if it's too complex it will be difficult to read and performance issues
+
+- Different ways to return the squared values of a list
+```python
+def map_func(x):
+    return x*x
+
+l = [3,4,5,24,23,50,563,34,1]
+print(list(map(map_func, l)))
+print(list(map(lambda x: x*x, l)))
+print([x*x for x in l])
+```
+- different ways to express vocabulary comprehensions
+```python
+d = {'a':1, 'b':2}
+
+print({k:v for (k,v) in d.items()})
+print({k:v for (k,v) in zip(['a','b'],[1, 2])})
+```
+
+
 
 
 

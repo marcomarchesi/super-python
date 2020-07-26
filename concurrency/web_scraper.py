@@ -14,20 +14,25 @@ def generate_urls(base_url, size):
         urls.append(base_url + str(i+1))
     return urls
 
-def scrape(url):
-    res = requests.get(url)
+def scrape(url, *args):
+    # a session speedups requests
+    print(args)
+
+    res = session.get(url)
     print(res.status_code, res.url)
 
-def use_threads(function, argument):
+
+def use_threads(session, function, argument):
     start_time = time.time()
     with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
-        executor.map(function, argument)
+        for arg in argument:
+            executor.submit(function, session, arg)
     print("Multithreading - Time elapsed: %s" % str(time.time() - start_time))
 
 def func(x):
     return x*x
 
-def use_multiprocessing(function, argument):
+def use_multiprocessing(session, function, urls):
     # with Pool in a context manager we don't need to terminate or join it
     # urls are not scraped in order
     with Pool(5) as p:
@@ -47,19 +52,18 @@ def use_apply_async(p):
 
 if __name__ == "__main__":
     urls = generate_urls('http://quotes.toscrape.com/page/', 10)
-    if len(sys.argv) > 1:
-        if sys.argv[1] == 'thread':
-            use_threads(scrape, urls)
+    with requests.Session() as session:
+        if len(sys.argv) > 1:
+            if sys.argv[1] == 'thread':
+                use_threads(session, scrape, urls)
+            else:
+                with Pool(5) as p:
+                    if sys.argv[1] == 'apply':
+                        use_apply(p)
+                    if sys.argv[1] == 'apply async':
+                        use_apply_async(p)
         else:
-            with Pool(5) as p:
-                if sys.argv[1] == 'apply':
-                    use_apply(p)
-                if sys.argv[1] == 'apply async':
-                    use_apply_async(p)
-    else:
-        use_multiprocessing(scrape, urls)
-
-
+            use_multiprocessing(scrape, urls)
 
 # we can run with `time python web_scraper.py`
 

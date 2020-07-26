@@ -29,6 +29,8 @@ if __name__ == '__main__':
     p.join()
 ```
 
+- `Process` is more efficient than `Pool` for a limited set of tasks that need to run longer. `Pool` waits for I/O operations to complete so it's more suitable if they are quick.
+
 ## Exchanging objects between Processes
 - `Queue` is process safe
 - put and get messages
