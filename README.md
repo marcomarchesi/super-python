@@ -9,6 +9,7 @@ All I need on Python
 [Built-in Functions](#Built-in-Functions)  
 [itertools module](#itertools-module)  
 [Logging](#Logging)
+[Design Patterns](#Design-Patterns)
 
 ## Coding Style
 - to follow PEP8
@@ -439,12 +440,13 @@ print(p3) #Point(5,9)
 ```python
 import logging
 #set the level and save all the log into a file (by default in append mode)
-logging.basicConfig(level=logging.DEBUG, filename='output.log', filemode='w')
+format = "%(asctime)s: %(message)s"
+logging.basicConfig(format=format, datefmt="%H:%M:%S", level=logging.INFO, 
+                    filename='output.log', filemode='w')
 logging.info("Hello hello {0}!".format("Marco"))
 ```
 
 TODO
-- add custom format and datetime
 - external data (dictionary)
 
 ## List Comprehensions
@@ -467,6 +469,92 @@ d = {'a':1, 'b':2}
 
 print({k:v for (k,v) in d.items()})
 print({k:v for (k,v) in zip(['a','b'],[1, 2])})
+```
+
+## Asyncronous Generators
+- They use `async` and `yield` to return multiple values during the function execution
+- Quick example:
+```python
+import asyncio
+
+async def do_something():
+    a = 10
+    yield a
+    b = 11
+    yield b
+    c = 77
+    yield c
+
+    return
+
+async def main():
+    async for done in do_something():
+        print(done) # 10, 11, 77
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+## Design Patterns
+
+### Singleton
+- A class that can be instanced only once
+```python
+class Singleton:
+   __instance = None
+   @staticmethod 
+   def getInstance():
+      ''' Static access method. '''
+      if Singleton.__instance == None:
+         Singleton()
+      return Singleton.__instance
+   def __init__(self):
+      ''' Virtually private constructor. '''
+      if Singleton.__instance != None:
+         raise Exception(colored('This is a singleton!', 'red'))
+      else:
+         Singleton.__instance = self
+```
+
+### Decorators
+- they add special functionality to functions and classes
+- common are `@staticmethod` and `@classmethod`
+- Basic example `@timer`, it calculates the time spent to execute a function:
+```python
+def timer(func):
+    def wrapper(*args, **kwargs):
+        start_time = time.time()
+        value = func(*args, **kwargs)
+        print("Elapsed time: {:.2f}s.".format(time.time() - start_time))
+        return value
+    return wrapper
+```
+- Example `@TODO(message)`, it prints a message on terminal to remind what to do.  
+It works on both functions and classes
+```python
+from functools import wraps
+import inspect
+
+def TODO(message):
+    def inner_function(func):
+        if inspect.isclass(func):
+            orig_init = func.__init__
+            # Make copy of original __init__, so we can call it without recursion
+            def __init__(self, *args, **kws):
+                name = self.__class__.__name__
+                print("TODO: {} {}".format(name, message))
+                orig_init(self, *args, **kws) # Call the original __init__
+            func.__init__ = __init__ # Set the class' __init__ to the new one
+            return func
+        else:
+            @wraps(func)
+            def wrapper(*args, **kwargs):
+                name = func.__name__
+                print("TODO: {} {}".format(name, message))
+                values = func(*args, **kwargs)
+                return values
+            return wrapper
+    return inner_function 
 ```
 
 
