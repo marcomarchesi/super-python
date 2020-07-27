@@ -1,4 +1,4 @@
-# python-python
+# super-python
 All I need on Python
 
 [Coding Style](#Coding-Style)  
@@ -292,6 +292,17 @@ for animal in animals:
     default_animals_counter[animal] += 1
 print(dict(default_animals_counter))
 #{'tiger': 2, 'gazelle': 1, 'giraffe': 2, 'lion': 1}
+```
+
+- another example: count all the occurrencies of characters in a word.
+```python
+from collections import defaultdict
+
+w = "Hello"
+d = defaultdict(int)
+for c in w:
+    d[c] += 1
+print(dict(d)) #{'H': 1, 'e': 1, 'l': 2, 'o': 1}
 ```
 
 ### Counter

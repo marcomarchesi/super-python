@@ -153,7 +153,7 @@ and using `recv()` and `send()` to receive and send data
 
 - difference between Pool.map and Pool.apply (and async versions)
 - use messages for communication between processes rather than synchronisation primitives like locks.
-- choose between `Pipe()` and `Queue()`
+- choose between `Pipe()` and `Queue()`: `Pipe` connects two processes, while `Queue` can connect multiple Producers and Consumers
 
 ### Manager
 - we use `Manager` to share data between processes which can run also on different machines and are connected over a network.
@@ -189,7 +189,7 @@ if __name__ == "__main__":
     process1.join()
     process2.join()
     # results
-    print(shared_list) #[1, 3, 2, 4] but [1, 2, 3, 4] if we uncomment time.sleep(1) 
+    print(shared_list) #it can be out-of-order but if we uncomment time.sleep(1) we force order
 ```
 
 ### Event
