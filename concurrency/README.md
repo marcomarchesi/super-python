@@ -155,6 +155,115 @@ and using `recv()` and `send()` to receive and send data
 - use messages for communication between processes rather than synchronisation primitives like locks.
 - choose between `Pipe()` and `Queue()`
 
+### Manager
+- we use `Manager` to share data between processes which can run also on different machines and are connected over a network.
+- 
+
+- Example:
+```python
+from multiprocessing import Manager, Process
+import time
+
+
+def worker1(l):
+    l.append(1)
+    # time.sleep(1)
+    l.append(3)
+
+def worker2(l):
+    l.append(2)
+    # time.sleep(1)
+    l.append(4)
+
+if __name__ == "__main__":
+    # create the manager
+    manager = Manager()
+    # create a list to share between processes. We can share also dictionaries
+    shared_list = manager.list()
+
+    # processes
+    process1 = Process(target=worker1, args=[shared_list])
+    process2 = Process(target=worker2, args=[shared_list])
+    process1.start()
+    process2.start()
+    process1.join()
+    process2.join()
+    # results
+    print(shared_list) #[1, 3, 2, 4] but [1, 2, 3, 4] if we uncomment time.sleep(1) 
+```
+
+### Event
+- `multiprocessing.Event` can be used to make processes wait for events and sync the data (otherwise out of order by default).
+- Example with Event and Manager [multiprocessing_event_example.py](multiprocessing_event_example.py)
+
+```python
+from multiprocessing import Manager, Process, Event
+import logging
+
+
+def worker1(l, e):
+    # e.wait()
+    l.append(1)
+    l.append(2)
+    logging.info("worker 1 is complete")
+
+def worker2(l, e):
+    e.wait() # this worker waits for the event to be set
+    l.append(3)
+    l.append(4)
+    logging.info("worker 2 is complete")
+    
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    # create the manager
+    event = Event()
+    manager = Manager()
+    # create a list to share between processes
+    shared_list = manager.list()
+
+    # processes
+    process1 = Process(target=worker1, args=[shared_list, event])
+    process2 = Process(target=worker2, args=[shared_list, event])
+    process1.start()
+    process2.start()
+    # process 1 can complete without waiting for any event while process 2 is blocked by the event
+    process1.join()
+    print(shared_list) #[1, 2] from process 1
+
+    # set the event that unblocks process 2
+    event.set() 
+
+    process2.join()
+    # results
+    print(shared_list) #[1, 2, 3, 4] in order
+```
+- Example by using a `Queue` that demonstrates how to put and get values in the right order, synchronised by an `Event`. [multiprocessing_queue_event_example.py](multiprocessing_queue_event_example.py)
+- alternatives: not a `Queue` as we put/get the values from it. Let's try a `Lock` applied on a list
+
+### Lock
+- another way to synchronising is using `Lock`
+- Example [multiprocessing_lock.py](multiprocessing_lock.py)
+```python
+from multiprocessing import Process, Lock
+import time
+
+def worker(l, i):
+    l.acquire()
+    # time.sleep(2) to simulate the order we acquire with lock
+    try:
+        print("Hello World", i)
+    finally:
+        l.release()
+        pass
+
+if __name__ == "__main__":
+    lock = Lock()
+    for i in range(10):
+        Process(target=worker, args=(lock, i)).start()
+```
+
+
 ## Async IO
 - let's turn all the tasks into coroutines, prefacing all function with `async`.
 - it works faboulously in networking situations
@@ -166,6 +275,10 @@ and using `recv()` and `send()` to receive and send data
 - a **task** is an object wrapped around a coroutine and made run in the event loop
 - from [GvR's answer](https://github.com/python/asyncio/issues/477): use `create_task()` if we need to create a `Task` from a coroutine. `ensure_future()` is required if we want to retrieve a `Future` as return. 
 **STILL A BIT CONFUSING**
+
+- in summary:
+    1. run the eventloop with `asyncio.run(main())`
+    2. create the tasks on `main()` and gather them
 
 
 - Examples:
