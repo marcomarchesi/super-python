@@ -1,5 +1,5 @@
 '''
-web scraper
+web_scraper.py
 '''
 
 import requests
@@ -14,13 +14,10 @@ def generate_urls(base_url, size):
         urls.append(base_url + str(i+1))
     return urls
 
-def scrape(url, *args):
-    # a session speedups requests
-    print(args)
-
+def scrape(session, url):
+    # a session speedups requests, better than using simple get
     res = session.get(url)
     print(res.status_code, res.url)
-
 
 def use_threads(session, function, argument):
     start_time = time.time()
@@ -47,7 +44,6 @@ def use_apply_async(p):
     # it runs only on one worker. It needs the function and the iterable arguments
     res = p.apply_async(func, (20,))
     print(res.get()) #400
-
 
 
 if __name__ == "__main__":
