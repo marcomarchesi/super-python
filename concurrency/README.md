@@ -10,7 +10,8 @@
 - they run in turns, not concurrently, at least on CPython (standard interpreter)
 - CPython is bound on GIL
 - When to use it:
-1. if the task needs to wait long for external resources or events. Example: [web_scraper.py](web_scraper.py)
+1. if the task needs to wait long time for external resources, or we want to run multiple I/O bound tasks simultaneously.
+Example: [web_scraper.py](web_scraper.py)
 2. to simplify design
 
 ```python
@@ -71,6 +72,7 @@ if __name__ == "__main__":
 
 - `threading.Event`. One thread signals an event and other threads wait for it. See the example in [producer_consumer.py](producer_consumer.py)
 
+- `threading.Condition`. Conditions are like an Event + Lock. So multiple threads wait for an event (a condition in this case) to become true and then they have access to some exclusive shared resources (like it happens with a lock).
 
 
 ## Multiprocessing

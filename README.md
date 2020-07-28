@@ -8,8 +8,8 @@ All I need on Python
 [String Templates](#String-Templates)  
 [Built-in Functions](#Built-in-Functions)  
 [itertools module](#itertools-module)  
-[Logging](#Logging)
-[Design Patterns](#Design-Patterns)
+[Logging](#Logging)  
+[Design Patterns](#Design-Patterns)  
 
 ## Coding Style
 - to follow PEP8
@@ -557,6 +557,20 @@ def TODO(message):
     return inner_function 
 ```
 
+## Dynamic Programming
+- Nothing really specific to Python, but good to remind a simple rule: if we have to instance a `for` loop inside the recursive function, we need to propagate the return outcomes explicitly.
+```python
+def do_something(arguments):
+
+    #conditions to be True
+    return True
+
+    for ...:
+        if do_something(subset_of_arguments) == True:
+            return True
+
+    return False
+```
 
 
 
